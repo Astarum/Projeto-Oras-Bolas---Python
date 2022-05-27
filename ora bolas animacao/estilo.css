@@ -1,5 +1,5 @@
 body{
-    background-color: #e7d0b4;
+    background-color: #8cdcf3;
     text-align: center;
 
 }
@@ -22,10 +22,18 @@ canvas{
     display: flex;
     margin-right: auto;
     margin-left: auto;
-    background-image: url("ceuazul.jpg");
+    background-image: url("campo.jpeg");
+    background-size: 1255px 780px;
+    background-position:center;
 }
-
-div#curriculo{
+.linhar{
+    display: flex;
+}
+.coluna{
+    flex: 33.33%;
+    padding: 5px;
+}
+div#sobreprojeto{
     border: 2px solid black;
     width: 300px;
     height: 200px;
@@ -34,17 +42,28 @@ div#curriculo{
 }
 
 #topoPagina{
-    background-color: #fae1d4;
-    border:2px solid black;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    width: 500px;
-    color: #000000;
-    font-size: 20pt;
-    margin-right: auto;
-    margin-left:auto;
+    width: 15%;
+    height: 200px;
+    background: rgba(255, 255, 255, 0);
+    float: left;
 }
+#topoPagina img{
+    max-height:100%; max-width:100%;
+}
+#titulo{
+
+    margin-left: 15%;
+    height: 200px;
+    background: rgba(0, 0, 0, 0);
+}
+#container{
+    width: 80%;
+    height: 200px;
+    background: rgba(0, 255, 255, 0);
+    margin-left: 60px;
+    padding: 10px;
+}
+
 #menu{
     width: 100%;
     display: flex;
@@ -67,7 +86,7 @@ div#curriculo{
     font-weight: bold ;
     font-family: "Arial Black";
     height: 50px;
-    width: 100px;
+    width: 150px;
     color: black;
 }
 
@@ -75,123 +94,91 @@ div#curriculo{
     padding-left: 10px;
 }
 #menu div:hover{
-    border-color: red;
+    border-color: #1162ff;
 }
 #menu div:active{
-    background-color: darkred;
+    background-color: #2555ff;
 }
 #menu a{
     text-decoration: none;
 }
-
-div#curriculo{
-    width: 500px;
-    height: 500px;
+div.animacao{
+    line-height: 50px;
 }
-#curriculo h2{
+div.sobreprojeto{
+    border: 2px solid black;
+    width: 300px;
+    height: 200px;
+    margin: auto;
+    background-color: #fae1d4;
+}
+
+div.sobreprojeto{
+    width: 1000px;
+    height: auto;
+}
+.sobreprojeto h2{
     margin-top: 0;
     text-align: center;
     font-size: 30pt;
 }
-#curriculo p{
+.sobreprojeto p{
     text-align: justify;
     font-size: 18pt;
     padding-left: 4px;
     padding-right: 4px;
 }
 
-div.sobreJogo{
-    width: 850px;
-    font:20pt "Arial";
-    text-align: justify;
-    border: 2px solid black;
-    padding-left: 5px;
-    padding-right: 5px;
+#corpocanvas{
+    width: 1400px;
+    height: 750px;
+
+    margin-left: 20px;
+    padding: 10px;
 
 }
-div.sobreJogo h2{
-    text-align: center;
-    color: #ffffff;
-    display: table-cell;
-    vertical-align: top;
-}
-.sobreJogo li{
-    padding: 10px;
-}
-/* título do jogo */
-div#wheel{
-    background-color: #fae1d4;
-    border:2px solid black;
+
+#meuCanvas{
+    width: 80.5%;
+    height: 100%;
+    border: 2px solid black;
     display: flex;
-    justify-content: center;
-    align-content: center;
-    width: 500px;
-    color: #000000;
-    font-size: 20pt;
     margin-right: auto;
-    margin-left:auto;
-    margin-bottom: 5px;
-}
-
-/* configuração padrão da página */
-div.jogabilidade{
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 5px;
-
-
-}
-.jogabilidade img{
-    margin-left: 5px;
-    align-self: stretch;
-
-}
-div#comojogarInterno{
-    width: 800px;
-    margin-top: 5px;
-    font:20pt "Arial";
-    text-align: justify;
-    border: 2px solid black;
-    padding-left: 5px;
-    padding-right: 5px;
-    height: 350px;
-}
-div.comojogarInterno h2{
-    text-align: center;
-}
-.comojogarInterno li{
-    padding: 10px;
-}
-
-/* Guia avançado*/
-div.avancado{
-    border: 2px solid black;
-    margin-top: 10px;
-    background-color: black;
-    color: white;
-    font-size: 20pt;
-}
-/* configurações abaixo do avançado*/
-div.mecanicas{
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 5px;
-    width: 50%;
     margin-left: auto;
-    margin-right: auto;
-    background-color: wheat;
+    background-image: url("campo.jpeg");
+    background-size: 1255px 780px;
+    background-position:center;
+
+
+    float: left;
 }
-/* responsividade*/
-div.sobreJogo2{
-    width: 100%;
-    font:20pt "Arial";
-    text-align: justify;
-    border: 2px solid black;
-    padding-left: 5px;
-    padding-right: 5px;
+#escolher_arquivo{
+    width: 600px;
+}
+input{
+    width: 100px;
+    font-size: 25px;
+    font-family: 'Arial Black';
+    margin-left: 1%;
+
+
+
 
 }
-/* fundo de tijolos*/
-div.fundo{
-   background-image: url("paredeintacta.png");
+.botoes_interacao{
+    margin-top: 25%;
+    width: 200px;
+    float: right;
+
 }
+.botoes_interacao input{
+    padding-top: 5px;
+    width: 200px;
+    margin-bottom:20px;
+}
+.sobreprojeto h4{
+    text-align: left;
+    font-size: 25px;
+    margin-left: 30px;
+}
+

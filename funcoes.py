@@ -1,14 +1,19 @@
 import io
 import math
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 
 #constantes
-const_velMax = 2.8
-const_raio = 0.3
+const_raio = 0.33
+const_aceleracao = 1.5
 PI_ = 3.14159265358979323
 vel_max = 2.3
+const_pasta_graficos = "graficos/"
+vel_alvo = 1
+const_variacao_tempo = 0.02
+const_modulo_bola = math.sqrt(math.pow(0.015,2)+math.pow(0.016,2))
 
 
+#função para ler os arquivos e retornar já lista com os valores em números reais
 def leitura_arquivos(nome_arquivo):
   arquivo = open(nome_arquivo,"r")
   lista = arquivo.readlines()
@@ -20,17 +25,16 @@ def leitura_arquivos(nome_arquivo):
   return lista_dados
 
 
-#função que calcula a distância 1ponto = robo, 2ponto = bola
-def dist(bolaX, distancia, bolaY, roboX,roboY, i):
-  #print(f"{bolaY}")
-  auxiliarX = (bolaX[i] - roboX[i+1])
-  auxiliarY = (bolaY[i] - roboY[i+1])
+#função que calcula a distância entre 2 pontos -> no caso ponto 1 = Robo; ponto 2 = Bola
+def dist(bolaX, bolaY, roboX,roboY):
+  auxiliarX = (bolaX - roboX)
+  auxiliarY = (bolaY - roboY)
   
   aux = math.sqrt((math.pow(auxiliarX,2) + math.pow(auxiliarY,2)))
-  distancia.insert(i,aux)
+  return aux
 
 
-
+#calculo de todas velocidades da bola, tanto em X como em Y
 def calculo_velocidade_aceleracao_Bola(tempo):
     velocidade_X = []
     velocidade_Y = []
@@ -50,50 +54,92 @@ def calculo_velocidade_aceleracao_Bola(tempo):
 
 
 #função que calcula o angulo  
-def angulo(ang, bolaX, bolaY, roboX,roboY, i):
+def angulo(bolaX, bolaY, roboX,roboY):
   global PI_     
   #oposto = eixo y      
-  oposto = (bolaY[i] - roboY[i])
+  oposto = (bolaY - roboY)
   #adjacente = eixo x
-  adjacente = (bolaX[i] - roboX[i])
+  adjacente = (bolaX - roboX)
   
   #evitar que faça divisão com denominador 0
   if (adjacente != 0):
 
     #calcula o arcotangente e já converte em graus
-    auxiliar = (math.atan(oposto / adjacente)) * 180 / PI_
+    ang = (math.atan(oposto / adjacente)) * 180 / PI_
   else:
     #caso o adjacente seja 0, verifica se o Y da bola é menor que o Y do robo
-    if (bolaY[i] < roboY[i]):
+    if (bolaY < roboY):
       #se sim, o vetor tem que ter direção de 270 graus (para baixo)
-      auxiliar = 270
+      ang = 270
     else:
       #se não, o vetor será virado para cima, com 90 graus
-      auxiliar = 90
+      ang = 90
   
   #tratar caso o Y da bola seja igual ao Y do robo
   if (oposto == 0):
     #verifica se o X da bola é maior que o X do robo
-    if (bolaX[i]>roboX[i]):
+    if (bolaX>roboX):
       #se sim, significa que a direção do vetor será 360, ou seja, para a direita
-      auxiliar = 360
+      ang = 360
     else:
       #se não, a direção sera 180 graus, para a esquerda
-      auxiliar = 180    
+      ang = 180    
   #insere o valor em uma lista chamada ang
-  ang.insert(i,auxiliar)
-
-#função quadrante para fazer correções no angulo
-def quadrante(bolaX,bolaY,roboX,roboY,i,ang):
-  #se o X da bola for menor que o X do robo
+    #se o X da bola for menor que o X do robo
   if (bolaX<roboX):
     #se o Y da bola for diferente do Y do robo, adiciona 180 graus ao angulo
     if (bolaY<roboY or bolaY>roboY):
-      ang[i] += 180
+      ang+= 180
   #se o X da bola for maior que o X do robo e o Y da bola for menor que o Y do robo, o vetor está no quarto quadrante
   # logo adiciona 360
   elif(bolaX>roboX and bolaY<roboY):
-    ang[i]+=360
+    ang+=360
+
+  return ang
+
+def angulo2(bolaX, bolaY, roboX,roboY):
+  global PI_     
+  #oposto = eixo y      
+  oposto = (bolaY + roboY)
+  #adjacente = eixo x
+  adjacente = (bolaX + roboX)
+  
+  #evitar que faça divisão com denominador 0
+  if (adjacente != 0):
+
+    #calcula o arcotangente e já converte em graus
+    ang = (math.atan(oposto / adjacente)) * 180 / PI_
+  else:
+    #caso o adjacente seja 0, verifica se o Y da bola é menor que o Y do robo
+    if (bolaY < roboY):
+      #se sim, o vetor tem que ter direção de 270 graus (para baixo)
+      ang = 270
+    else:
+      #se não, o vetor será virado para cima, com 90 graus
+      ang = 90
+  
+  #tratar caso o Y da bola seja igual ao Y do robo
+  if (oposto == 0):
+    #verifica se o X da bola é maior que o X do robo
+    if (bolaX>roboX):
+      #se sim, significa que a direção do vetor será 360, ou seja, para a direita
+      ang = 360
+    else:
+      #se não, a direção sera 180 graus, para a esquerda
+      ang = 180    
+  #insere o valor em uma lista chamada ang
+    #se o X da bola for menor que o X do robo
+  if (bolaX<roboX):
+    #se o Y da bola for diferente do Y do robo, adiciona 180 graus ao angulo
+    if (bolaY<roboY or bolaY>roboY):
+      ang+= 180
+  #se o X da bola for maior que o X do robo e o Y da bola for menor que o Y do robo, o vetor está no quarto quadrante
+  # logo adiciona 360
+  elif(bolaX>roboX and bolaY<roboY):
+    ang+=360
+
+  return ang  
+
   
 
 #função que calcula o raio de interceptação  
@@ -131,35 +177,41 @@ def velocidade_aceleracao_Robo(velTotal,velX, velY, aX, aY, a,angulo, i,tempo):
     velTotal.insert(i+1,calculo_velTotal) 
 
 #função que calcula o deslocamento em X S = S0+v0t+0.5*at
-def deslocamento_RoboX(deslX, acelX,velocidadeX, i,tempo): 
+def deslocamento_RoboX(deslX, acelX,velocidadeX, tempo): 
     #*auxiliarX = deslX[i] + velocidadeX * tempo + 0.5 * acelX * tempo;
     #*auxiliarY = deslY[i] + velocidadeY * tempo + 0.5 * acelY * tempo;
-    auxiliarX = deslX[i] + velocidadeX * tempo + 0.5 * acelX * tempo
+    auxiliarX = deslX + velocidadeX * tempo + 0.5 * acelX * math.pow(tempo,2)
     return auxiliarX
 #calcula o deslocamento em Y 
-def deslocamento_RoboY(deslY,acelY, velocidadeY, i,tempo): 
+def deslocamento_RoboY(deslY,acelY, velocidadeY, tempo): 
     #*auxiliarX = deslX[i] + velocidadeX * tempo + 0.5 * acelX * tempo;
     #*auxiliarY = deslY[i] + velocidadeY * tempo + 0.5 * acelY * tempo;
     
-    auxiliarY = deslY[i] + velocidadeY * tempo + 0.5 * acelY * tempo
+    auxiliarY = deslY + velocidadeY * tempo + 0.5 * acelY * math.pow(tempo,2)
     return auxiliarY
-#movimento uniforme    
-# def deslocamento_uniforme_roboX(deslX,velocidadeX,i,tempo):
-#   return deslX[i] + velocidadeX * tempo
-# def deslocamento_uniforme_roboY(deslY,velocidadeY,i,tempo):
-#   return deslY[i] + velocidadeY * tempo  
+
+
+
 
     
 #funções para os graficos    
 def gerar_graficoDistancia(grafico_tempo, grafico_distancia):
   #distancia do robo e da bola.
-  matplotlib.pyplot.title('Distancia entre o robo e a bola até o momento da interceptação')
-  matplotlib.pyplot.xlabel('Distancia')
-  matplotlib.pyplot.ylabel('TEMPO')
-
-  matplotlib.pyplot.plot(grafico_distancia, grafico_tempo)
-
-  matplotlib.pyplot.show()
+  plt.title('Distancia entre o robo e a bola até o momento da interceptação')
+  plt.xlabel('Distancia (m)')
+  plt.ylabel('Tempo (s)')
+  
+  ax = plt.subplot(111)
+  
+  ax.plot(grafico_distancia,grafico_tempo,label="Distancia")
+  
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoDistanciaTempo.png")
+  plt.show()
 
 # def gera_graficoPosicao(grafico_bolaX,grafico_bolaY,grafico_roboX,grafico_roboY):
 #   # esse grafico marca o instante da interceptação, sobre o tempo 
@@ -172,105 +224,183 @@ def gerar_graficoDistancia(grafico_tempo, grafico_distancia):
 
 def gera_graficoPosicaoTempo(grafico_bolaX,grafico_bolaY,grafico_roboX,grafico_roboY, grafico_tempo):
   #distancia do robo e da bola.
-  matplotlib.pyplot.title('trajetória do robo e da bola até o momento da interceptação \n em função do tempo')
+  plt.title('trajetória do robo e da bola até o momento da interceptação \n em função do tempo')
+  
+  plt.xlabel('Deslocamento (m)')
+  plt.ylabel('Tempo (s)')
+  
+  ax = plt.subplot(111)
+  
+  ax.plot(grafico_roboX,grafico_tempo,label="RoboX")
+  ax.plot(grafico_roboY,grafico_tempo,label="RoboY")
+  ax.plot(grafico_bolaX,grafico_tempo,label="BolaX")
+  ax.plot(grafico_bolaY,grafico_tempo,label="BolaY")
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-  matplotlib.pyplot.xlabel('Azul = robo em x  Lar = robo em y  Verde = bola em x verm = bola em y')
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoPosicaoTempo.png")
 
-#posição do robo
-  matplotlib.pyplot.plot(grafico_roboX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_roboY, grafico_tempo)
-#posição da bola
-  matplotlib.pyplot.plot(grafico_bolaX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_bolaY, grafico_tempo)
+  
 
-  matplotlib.pyplot.show()
+  plt.show()
 
 def gera_graficoPosicaoXY(grafico_bolaX,grafico_bolaY,grafico_roboX,grafico_roboY):
     #distancia do robo e da bola.
-    matplotlib.pyplot.title('trajetória do robo e da bola até o momento da interceptação \n em um plano XY')
+  plt.title('trajetória do robo e da bola até o momento da interceptação \n em um plano XY')
 
-    matplotlib.pyplot.xlabel('Azul = robo, Laranja = bola')
+  plt.xlabel('Deslocamento (m)')
+  plt.ylabel('Tempo (s)')
+  
+  ax = plt.subplot(111)
+  
+  ax.plot(grafico_roboX,grafico_roboY,label="Robo")
+  
+  ax.plot(grafico_bolaX,grafico_bolaY,label="Bola")
+ 
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-  #posição do robo
-    matplotlib.pyplot.plot(grafico_roboX, grafico_roboY)
-  #posição da bola
-    matplotlib.pyplot.plot(grafico_bolaX, grafico_bolaY)
     
-    matplotlib.pyplot.xlim([0,9])
-    matplotlib.pyplot.ylim([0,6])
-    matplotlib.pyplot.show()    
+  plt.xlim([0,9])
+  plt.ylim([0,6])
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoPosicaoXY.png")
+  plt.show()    
 
 
 def gera_graficoVelocidadeRobo(grafico_veloRoboX, grafico_veloRoboY, grafico_tempo):
   #velocidade do robo.
-  matplotlib.pyplot.title('velocidade do robo até o momento da interceptação')
-  matplotlib.pyplot.xlabel('Azul = velocidade do robo em x  Laranja = velocidade do robo em y ')
+  plt.title('velocidade do robo até o momento da interceptação')
+
+  plt.xlabel('Velocidade (m/s)')
+  plt.ylabel('Tempo (s)')
+  
+  ax = plt.subplot(111)
+  
+  ax.plot(grafico_veloRoboX,grafico_tempo,label="Robo_vx")
+  ax.plot(grafico_veloRoboY,grafico_tempo,label="Robo_vy")
+
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 
-  matplotlib.pyplot.plot(grafico_veloRoboX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_veloRoboY, grafico_tempo)
-  matplotlib.pyplot.show()
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoVelocidadeRobo.png")
+  plt.show()
 
 def gera_graficoAceleracaoRobo(grafico_acelX, grafico_acelY, grafico_tempo):
   #aceleração.
-  matplotlib.pyplot.title('aceleração do robo até o momento da interceptação')
-  matplotlib.pyplot.xlabel('Azul = aceleração do robo em x  Laranja = aceleração do robo em y ')
-  matplotlib.pyplot.plot(grafico_acelX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_acelY, grafico_tempo)
+  plt.title('aceleração do robo até o momento da interceptação')
 
-  matplotlib.pyplot.show()
+  plt.xlabel('Aceleração (m/s²)')
+  plt.ylabel('Tempo (s)')
+  
+  ax = plt.subplot(111)
+  
+  ax.plot(grafico_acelX,grafico_tempo,label="Robo_aX")
+  ax.plot(grafico_acelY,grafico_tempo,label="Robo_aY")
+  
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoAceleracaoRobo.png")
+
+  plt.show()
 
 
 def gera_graficoVelocidadeBola(grafico_velo_bolaX, grafico_velo_bolaY, grafico_tempo):
   #velocidade do robo.
-  matplotlib.pyplot.title('velocidade da bola até o momento da interceptação')
-  matplotlib.pyplot.xlabel('Azul = velocidade da bola em x  Laranja = velocidade da bola em y ')
+  plt.title('velocidade da bola até o momento da interceptação')
+  
+  plt.xlabel('Velocidade (m/s)')
+  plt.ylabel('Tempo (s)')
+  
+  ax = plt.subplot(111)
+  
 
+  ax.plot(grafico_velo_bolaX,grafico_tempo,label="Bola_vx")
+  ax.plot(grafico_velo_bolaY,grafico_tempo,label="Bola_vy")
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-  matplotlib.pyplot.plot(grafico_velo_bolaX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_velo_bolaY, grafico_tempo)
-  matplotlib.pyplot.show()
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoVelocidadeBola.png")
+  plt.show()
 
 def gera_graficoAceleracaoBola(grafico_acel_bolaX, grafico_acel_bolaY, grafico_tempo):
   #aceleração.
-  matplotlib.pyplot.title('aceleração da bola até o momento da interceptação')
-  matplotlib.pyplot.xlabel('Azul = aceleração da bola em x  Laranja = aceleração da bola em y ')
-  matplotlib.pyplot.plot(grafico_acel_bolaX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_acel_bolaY, grafico_tempo)
+  plt.title('aceleração da bola até o momento da interceptação')
+  plt.xlabel('Aceleração (m/s²)')
+  plt.ylabel('Tempo (s)')
+  
+  ax = plt.subplot(111)
 
-  matplotlib.pyplot.show()
+  ax.plot(grafico_acel_bolaX,grafico_tempo,label="Bola_aX")
+  ax.plot(grafico_acel_bolaY,grafico_tempo,label="Bola_aY")
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoAceleracaoBola.png")
+  plt.show()
 
 def gera_grafico_Velocidade_RoboBola(grafico_veloRoboX, grafico_veloRoboY,grafico_velo_bolaX, grafico_velo_bolaY, grafico_tempo):
-  matplotlib.pyplot.title('Velocidade do robo e da bola \n em função do tempo')
-
-  matplotlib.pyplot.xlabel('Azul = robo_vx,  Lar = robo_vy, Verde = bola_vy verm = bola_vy')
-
-  #posição do robo
-  matplotlib.pyplot.plot(grafico_veloRoboX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_veloRoboY, grafico_tempo)
+  plt.title('Velocidade do robo e da bola \n em função do tempo')
+  plt.xlabel('Velocidade (m/s)')
+  plt.ylabel('Tempo (s)')
   
-  #posição da bola
-  matplotlib.pyplot.plot(grafico_velo_bolaX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_velo_bolaY, grafico_tempo)
- 
+  ax = plt.subplot(111)
+  
+  ax.plot(grafico_veloRoboX,grafico_tempo,label="Robo_vx")
+  ax.plot(grafico_veloRoboY,grafico_tempo,label="Robo_vy")
+  ax.plot(grafico_velo_bolaX,grafico_tempo,label="Bola_vx")
+  ax.plot(grafico_velo_bolaY,grafico_tempo,label="Bola_vy")
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-  matplotlib.pyplot.show()    
+
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoVelocidadeRoboBola.png")
+
+  plt.show()    
 
 def gera_grafico_Aceleracao_RoboBola(grafico_acelX, grafico_acelY,grafico_acel_bolaX, grafico_acel_bolaY, grafico_tempo):
-  matplotlib.pyplot.title('Aceleracao e velocidade do robo e da bola \n em função do tempo')
-
-  matplotlib.pyplot.xlabel('Azul = robo_ax,  Lar = robo_ay, Verde = bola_ax verm = bola_ay')
-
-  #posição do robo
- 
-  matplotlib.pyplot.plot(grafico_acelX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_acelY, grafico_tempo)
-  #posição da bola
+  plt.title('Aceleracao e velocidade do robo e da bola \n em função do tempo')
+  plt.xlabel('Aceleração (m/s²)')
+  plt.ylabel('Tempo (s)')
   
-  matplotlib.pyplot.plot(grafico_acel_bolaX, grafico_tempo)
-  matplotlib.pyplot.plot(grafico_acel_bolaY, grafico_tempo)
+  ax = plt.subplot(111)
+  
+  ax.plot(grafico_acelX,grafico_tempo,label="Robo_aX")
+  ax.plot(grafico_acelY,grafico_tempo,label="Robo_aY")
+  ax.plot(grafico_acel_bolaX,grafico_tempo,label="Bola_aX")
+  ax.plot(grafico_acel_bolaY,grafico_tempo,label="Bola_aY")
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+  
+  
+  # Put a legend to the right of the current axis
+  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-  matplotlib.pyplot.show()        
+  plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoAceleracaoRoboBola.png")
+  plt.show()        
 
 
 def angulo_referencia(bolaX, bolaY, roboX,roboY):
@@ -315,4 +445,3 @@ def angulo_referencia(bolaX, bolaY, roboX,roboY):
   elif(bolaX>roboX and bolaY<roboY):
     ang=360
   return ang  
-

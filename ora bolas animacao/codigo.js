@@ -1,140 +1,78 @@
 
-    //Para facilitar a consulta neste código, utilize o seguinte sumário:
-    //(só copiar do número até a primeira palavra)
-//  1 - Objetos
-//  2 - Importação as imagens utilizadas
-//  3 - Menu principal
-//  4 - Tela de seleção de fases
-//  5 - Tela de nova fase
-//  6 - Tela de game over
-//  7 - Blocos de condições associadas aos cliques do mouse
-//  8 - Desenho de todos elementos
-//  9 - Movimento das nuvens
-//  10 - Movimento da carriola
-//  11 - Geração aleatória de boost
-//  12 - Geração aleatória de cubos de vida
-//  13 - Geração aleatória de penas
-//  14 - Geração aleatória de pesos
-//  15 - Geração aleatória de tijolos
-//  16 - Desenho do score e objetivo
-//  17 - Desenho da barra de vida, poder e peso
-//  18 - Cálculo de FPS
-//  19 - Função principal que engloba a linha do requestAnimationFrame
-
 
 let canvas = document.getElementById("meuCanvas");
 let ctx = canvas.getContext("2d")
+//tamanho do campo
 const campoX = 9;
 const campoY = 6;
-//variáveis para fazer o cálculo com relação ao refresh rate do monitor
-var fps, intervalo, startTime, agora, depois, tempoPassado;
-
-//variável que guarda o valor da diferença dos framerate superiores a 60 ou inferiores
-let ajuste2;
 
 
-
-
-
+//listas da bola, do robo e do tempo
 var bolaX = [];
 var bolaY = [];
 var roboX = [];
 var roboY = [];
+var  tempo = []
 
 
-let objetivoConcluido = false;
 
-fps = 60 //coloque aqui o "refreshrate" do seu monitor - padrão 60hz
-if(60/fps != 1){
-    ajuste2 = 60/fps
-}else{
-    ajuste2 = 1;
-}
-let  ajusteParaFrameRate = 1.8*ajuste2 //parâmetro para ajustar a velocidade do jogo, já que eu fiz em 144hz, porém o padrão é 60hz.
 
-//1 - OBJETOS
-let chao = {
-    x:0,
-    y:canvas.height-50,         //chão
-    largura: canvas.width+2,
-    altura: 50
-}
 let robo = {
 
 
     x: canvas.width/2,
     y: canvas.height/2,
-    proporcaoX: campoX/0.7,
-    proporcaoY: campoY/0.7,
+    proporcaoX: campoX/0.8,
+    proporcaoY: campoY/0.8,
         get largura(){
             return (canvas.width/this.proporcaoX);
         },
 
     get altura(){
-        return (canvas.height/this.proporcaoY);   //botao de iniciar jogo
+        return (canvas.height/this.proporcaoY);   //propriedades do robo
     },
 
 }
 let bola = {
     x: canvas.width/2,
     y: canvas.height/2,  //carrinho
-    proporcaoX: campoX/0.14,
-    proporcaoY: campoY/0.14,
+    proporcaoX: campoX/0.30,
+    proporcaoY: campoY/0.30,
     get largura(){
         return (canvas.width/this.proporcaoX);
     },
 
     get altura(){
-        return (canvas.height/this.proporcaoY);   //botao de iniciar jogo
+        return (canvas.height/this.proporcaoY);   //propriedades da bola
     },
 
 }
 
 
-/* Caso queira fazer "peso" único
-let pesoPesado = {
-    x: 30 + Math.random()*canvas.width - 30,
-    y: -20,
-    largura:50,
-    altura:50,
-    velocidade: 1*ajusteParaFrameRate
-}*/
 
-let parede = {
-    x:0,
-    y:0,                        //parede de tijolos - fundo
-    largura:canvas.width,
-    altura: canvas.height-50
+let campo = {
+    x:-65,
+    y:-15,                        //propriedades do campo
+    largura:canvas.width+131,
+    altura: canvas.height+30,
 }
 
 
-////////2 - importação das imagens utilizadas
+//////// importação das imagens utilizadas
 let imagem_robo = new Image();
 imagem_robo.src = 'robo-smallsize.png'; //robo -small size
 
 let imagem_bola = new Image();
-imagem_bola.src = 'bola.png'; //tijolo
+imagem_bola.src = 'bola.png';
+
+let imagem_campo = new Image();
+imagem_campo.src = 'campo.jpeg';
 
 
 
+//pega as informações do arquivo e guarda nas listas
+var file = document.getElementById('escolher_arquivo');
 
-
-
-//Bloco que captura as teclas pressionadas
-let teclas = {}
-document.addEventListener('keydown',function(evento){
-    teclas[evento.keyCode] = true;
-})
-
-document.addEventListener('keyup',function(evento){
-    delete teclas[evento.keyCode];
-})
-
-
-
-//8 - Desenho de todos elementos
-//Desenho de todos elementos
-var file = document.getElementById('inputfile');
 
 
 var terminado = false;
@@ -142,22 +80,25 @@ file.addEventListener('change', () => {
 
     var fr = new FileReader();
     fr.onload = function() {
+        //le o arquivo e cria uma lista com as linhas
+        var linhas = this.result.split('\n');
 
-        var lines = this.result.split('\n');
-
-        for(var i=0;i<lines.length;i++){
-            if (lines[i]!=""){
-                dividido = lines[i].split(" ");
+        //atribui cada valor da linha à lista correta
+        for(var i=0;i<linhas.length;i++){
+            if (linhas[i]!=""){
+                dividido = linhas[i].split(" ");
                 //console.log(dividido[0]);
 
                 bolaX.push(parseFloat(dividido[1]));
                 bolaY.push(parseFloat(dividido[2]));
                 roboX.push(parseFloat(dividido[3]));
                 roboY.push(parseFloat(dividido[4]));
+                tempo.push(parseFloat(dividido[0]));
+
             }
         }
 
-
+        //termina o processo
         terminado = true;
 
     }
@@ -169,36 +110,43 @@ file.addEventListener('change', () => {
         console.log(bolaX);
     }
 
+//variável que bloqueia o desenho das figuras
 var desenhado = false;
+
+//desenha o campo
+ function desenharCampo(){
+
+     ctx.drawImage(imagem_campo,campo.x,campo.y,campo.largura,campo.altura);
+
+ }
+
+//desenha todos os outros elementos
 function desenharElementos(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 
-
+    ctx.drawImage(imagem_campo,campo.x,campo.y,campo.largura,campo.altura);
     ctx.drawImage(imagem_robo, robo.x, robo.y, robo.largura, robo.altura);
     ctx.drawImage(imagem_bola,bola.x,bola.y,bola.largura,bola.altura);
+
+    //tempo
+    ctx.fillStyle = "black";
+    ctx.textAlign = 'center';
+    ctx.font = "45px Arial";
+
+    ctx.fillText(tempo[j], canvas.width/2, (canvas.height)/2-300);
     desenhado = true;
 
-    //Desenho do carrinho
-    /*
-    if (robo.esquerda === false && robo.direita === true){
-
-    }else{
-        ctx.drawImage(imagem_carrinhoEsquerda, robo.x, robo.y, robo.largura, robo.altura);
-    }
-    */
-    //Desenho do chão
 
 
 }
 
-//10 - Movimento da carriola
-//Variáveis usadas no próximo bloco
-let boostSegundo = 0;           //Determina a responsividade da barra de boost e o tempo pressionando o botão de boost
-let boostFunciona = true;       //Limita o uso do boost
-let pause = false;              //Pausar o jogo
+
+//variável para contar os indices das listas
 var j = 0;
-function movimentoRobo() {
+
+//atribui movimento ao robo e abola
+function movimentoRoboBola() {
 
 /*
     robo.x = canvas.width/2-robo.largura/2-canvas.width*0.001;
@@ -212,72 +160,72 @@ function movimentoRobo() {
     var bolaX_correto = campoX/bolaX[j];
     var bolaY_correto = campoY/bolaY[j];
 
+    //cria a função do pause, só executa se não estiver pausado
+    if (pause == false){
 
-    robo.x = (canvas.width/roboX_correto)-robo.largura/2;
-    robo.y = canvas.height-(canvas.height/roboY_correto)-robo.altura/2;
-    bola.x = -bola.largura/2+(canvas.width/bolaX_correto);
-    bola.y = canvas.height-(canvas.height/bolaY_correto)-bola.altura/2;
-    j+=1;
-    if(j>roboX.length-1){
-        j = roboX.length-1;
-    }
+        robo.x = (canvas.width/roboX_correto)-robo.largura/2;
+        robo.y = canvas.height-(canvas.height/roboY_correto)-robo.altura/2;
+        bola.x = -bola.largura/2+(canvas.width/bolaX_correto);
+        bola.y = canvas.height-(canvas.height/bolaY_correto)-bola.altura/2;
+        j+=1;
 
-}
-
-
-/*
-//18 - Cálculo de FPS
-function calculoFPS(fps){
-    intervalo = 1000 / fps;     //função que determina os parâmetros para o cálculo da taxa de atualização padrão para todos
-    depois = Date.now();        //monitores e chama a função que executa as animações
-    startTime = depois;
-    principal();
-}
-*/
-//19 - Função principal (que englobal a linha do requestAnimationFrame)
-let atualizacao = 0;
-let contador2 = 0;
-function principal(){    ///função que executa as todas as animações
-       //parâmetro para determinar o gameover e cortar animações
-    requestAnimationFrame(principal)
-    console.log(desenhado);
-    if (terminado == true){
-        desenharElementos();
-    }
-    if(contador2%10==0){
-        console.log(contador2)
-        if(desenhado==true){
-            movimentoRobo();
+        if(j>roboX.length-1){
+            j = roboX.length-1;
         }
     }
 
 
-    agora = Date.now();                             //Cálculos feitos para fazer com que o framerate não importe na animação,
-    tempoPassado = agora - depois;                  //ou seja, uma pessoa com 144hz, vai ter o mesmo número de animações que
-    if(tempoPassado > intervalo){                   //alguém com 60hz.
-        atualizacao +=1                             //
-        depois = agora - (tempoPassado % intervalo); //
 
-        //desenharElementos();
-        //movimentoCarrinho();
-        /*
-        if(fimDeJogo === false && objetivoConcluido === false){
-            movimentoBoost();
-            movimentoPena();
-            barrasVidaEPoder();
-            score(fase);
-            contador2 = 0
-        }else if(fimDeJogo === true){                                                   //executar a linha de gameover
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            atualizacao = 0;
-            gameover();
-        }else if(objetivoConcluido === true){
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            atualizacao = 0;
-            novaFase();
-        }*/
+}
+
+
+
+//contador para controlar a velocidade da animação
+let contador2 = 0;
+
+///função que executa as todas as animações
+function principal(){
+
+    requestAnimationFrame(principal)
+    desenharCampo();
+
+
+    //só desenha se já tiver terminado de pegar todas informações do arquivo
+    if (terminado == true){
+        desenharElementos();
     }
+    //controla a velocidade da animação, quanto maior o valor, mais lenta a animação
+    if(contador2%10==0){
+
+        if(desenhado==true){
+            movimentoRoboBola();
+
+        }
+
+    }
+
+
+
     contador2+=1;
 }
 
-principal();
+//controlar o pause
+let pause = false;
+function pausar(){
+    if (pause == false){
+        pause = true;
+    }else{
+        pause = false;
+    }
+
+}
+
+
+
+//botao de iniciar
+function iniciar(){
+        principal();
+
+
+}
+
