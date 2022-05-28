@@ -8,6 +8,14 @@ from tkinter import scrolledtext
 
 
 
+
+
+'''
+======================================================================================
+                                    INTERFACE GRAFICA
+======================================================================================
+'''
+
 #criação da interface grafica
 janela = Tk()
 janela.title("Projeto Ora Bolas")
@@ -205,6 +213,11 @@ def iniciar():
       #atribui todos os valores das velocidades e acelerações da bola para as 4 listas
       velocidade_BolaX,velocidade_BolaY,aceleracao_BolaX,aceleracao_BolaY = funcoes.calculo_velocidade_aceleracao_Bola(tempoFloat)
 
+      '''
+      ======================================================================================
+                                          INTERCEPTAÇÃO DA BOLA
+      ======================================================================================
+      '''
       #loop até o momento de interceptação
       for i in range(len(tempoFloat)):
 
@@ -299,6 +312,7 @@ def iniciar():
           velY_robo[i+1] = velTotal_robo[i+1]*math.sin(math.radians(ang[i]))
         
        
+        #se a distancia for menor que o raio de interceptação
         if (distancia[i] <= funcoes.const_raio+(funcoes.const_raio*0.1)):
           #o primeiro elemento das listas para retirar a folga
           velX_robo.pop(0)
@@ -332,6 +346,12 @@ def iniciar():
         #deleta os campos de escrita da interface   
         posicao_X.delete(0,END)
         posicao_Y.delete(0,END)
+
+'''
+======================================================================================
+                                    BOTÃO GERAR GRÁFICOS
+======================================================================================
+'''        
 #gera os graficos        
 def graficos():
   global velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_velocidade_BolaY,grafico_velocidade_BolaX
@@ -366,6 +386,11 @@ def graficos():
     #grafico da aceleração da bola e do robo em função do tempo
     funcoes.gera_grafico_Aceleracao_RoboBola(aX_robo,aY_robo,grafico_aceleracao_BolaX,grafico_aceleracao_BolaY,graficoTempo)          
   
+'''
+======================================================================================
+                                    BOTÃO DE INICIO (Retornar ao inicio)
+======================================================================================
+'''  
 #função para o botao de inicio
 def inicio():
   global xI,yI,velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_velocidade_BolaY,grafico_velocidade_BolaX,ultimo_elemento,deslocamentoX,deslocamentoY,ang,raioX,raioY,existem_dados,primeira_interacao_anterior,primeira_interacao_proximo,interacao_entre_botoes
@@ -379,7 +404,7 @@ def inicio():
     txt.insert(END,("\nO angulo do vetor posição atual é %.2f\n"% ang[i]))
     txt.insert(END,("\nInstante atual de tempo: %.2f\n"% tempoFloat[i]))
     txt.insert(END,("\nraioX: %f, raioY %f\n"% (raioX[i], raioY[i])))
-    txt.insert(END,("\nraio total: %f\n"% (math.sqrt(math.pow(raioX[i],2)+math.pow(raioY[i],2)))))
+    txt.insert(END,("\nDistância entre o robo e a bola: %f\n"% (distancia[i])))
     txt.insert(END,("\naceleracaoX: %f, aceleracaoY %f"% (aX_robo[i], aY_robo[i])))
 
     #troca o valor das variaveis de bloqueio
@@ -390,6 +415,11 @@ def inicio():
   else:
     messagebox.showerror("Error","Não há dados")   
 
+'''
+======================================================================================
+                                    BOTÃO ULTIMO
+======================================================================================
+'''
 #função que mostra o ultimo dado  
 def ultimo():
   global velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_velocidade_BolaY,grafico_velocidade_BolaX,ultimo_elemento,deslocamentoX,deslocamentoY,ang,raioX,raioY,primeira_interacao_anterior,primeira_interacao_proximo,interacao_entre_botoes
@@ -409,7 +439,14 @@ def ultimo():
     primeira_interacao_proximo = True
     interacao_entre_botoes = i
   
+'''
+======================================================================================
+                                    BOTÃO ANTERIOR
+======================================================================================
+'''
+
 #função do botao de anterior
+
 def anterior():
   global velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_velocidade_BolaY,grafico_velocidade_BolaX,ultimo_elemento,deslocamentoX,deslocamentoY,ang,raioX,raioY,existem_dados,interacao_entre_botoes,primeira_interacao_anterior,primeira_interacao_proximo
   txt.delete(1.0,END)
@@ -447,13 +484,19 @@ def anterior():
         txt.insert(END,("\nO angulo do vetor posição atual é %.2f\n"% ang[i]))
         txt.insert(END,("\nInstante atual de tempo: %.2f\n"% tempoFloat[i]))
         txt.insert(END,("\nraioX: %f, raioY %f\n"% (raioX[i], raioY[i])))
-        txt.insert(END,("\nraio total: %f\n"% (math.sqrt(math.pow(raioX[i],2)+math.pow(raioY[i],2)))))
         txt.insert(END,("\naceleracaoX: %f, aceleracaoY %f"% (aX_robo[i], aY_robo[i])))
         txt.insert(END,("\n---------------------------------------------"))  
         txt.insert(END,("\nO robo se moveu para (%.2f,%.2f)"% (deslocamentoX[i],deslocamentoY[i])))
+        txt.insert(END,("\nDistância entre o robo e a bola após o movimento: %f\n"% (distancia[i])))
         txt.insert(END,("\nVelocidade após o movimento: %f\n" % (math.sqrt(math.pow(velX_robo[i],2)+math.pow(velY_robo[i],2)))))
         interacao_entre_botoes = i
 
+
+'''
+======================================================================================
+                                    BOTÃO PROXIMO
+======================================================================================
+'''
 #função do botao de proximo faz o contrario da função do anterior
 def proximo():
   global velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_velocidade_BolaY,grafico_velocidade_BolaX,ultimo_elemento,deslocamentoX,deslocamentoY,ang,raioX,raioY,existem_dados,interacao_entre_botoes,primeira_interacao_proximo,primeira_interacao_anterior
@@ -486,14 +529,20 @@ def proximo():
         txt.insert(END,("\nO angulo do vetor posição atual é %.2f\n"% ang[i]))
         txt.insert(END,("\nInstante atual de tempo: %.2f\n"% tempoFloat[i]))
         txt.insert(END,("\nraioX: %f, raioY %f\n"% (raioX[i], raioY[i])))
-        txt.insert(END,("\nraio total: %f\n"% (math.sqrt(math.pow(raioX[i],2)+math.pow(raioY[i],2)))))
+        
         txt.insert(END,("\naceleracaoX: %f, aceleracaoY %f"% (aX_robo[i], aY_robo[i])))
         txt.insert(END,("\n---------------------------------------------"))  
         txt.insert(END,("\nO robo se moveu para (%.2f,%.2f)"% (deslocamentoX[i],deslocamentoY[i])))
+        txt.insert(END,("\nDistância entre o robo e a bola após o movimento: %f\n"% (distancia[i])))
         txt.insert(END,("\nVelocidade no momento do contato: %f\n" % (math.sqrt(math.pow(velX_robo[i],2)+math.pow(velY_robo[i],2)))))
         interacao_entre_botoes = i
            
-   
+
+'''
+======================================================================================
+          BOTÃO GERAR .TXT (para o restante do movimento do robo e da bola)
+======================================================================================
+'''   
 def javascript():
   global velocidade_recuo,frearX,velTotal_robo,velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_aceleracao_BolaY,grafico_velocidade_BolaX,grafico_velocidade_BolaY,bolaX,bolaY,tempoFloat,grafico_aceleracao_BolaY,grafico_aceleracao_BolaY,ultimo_elemento,deslocamentoX,deslocamentoY,ang,raioX,raioY,existem_dados,primeira_interacao_anterior,primeira_interacao_proximo,existem_dados,interacao_entre_botoes
   if existem_dados == False:
@@ -560,6 +609,11 @@ def javascript():
     bola_desaleracaoY = math.sin(math.radians(novo_angulo[0]))*funcoes.const_modulo_bola*-1
     ###TRAJETORIA APOS A INTERCEPTAÇAO, ROTACIONA AO REDOR DA BOLA
     #enquanto não chegar no fim  
+    '''
+    ======================================================================================
+         TRAJETÓRIA AO REDOR DA BOLA + RECUO DA BOLA APÓS A INTERCEPTAÇÃO
+    ======================================================================================
+    '''
     while fim == False:
 
       #incrementa nos angulos  
@@ -610,16 +664,10 @@ def javascript():
       nova_velTotal.append((math.sqrt(math.pow(nova_vel_X[j+1],2)+math.pow(nova_vel_Y[j+1],2))))
       novo_roboX.insert(j+1,distancia_finalX)
       novo_roboY.insert(j+1,distancia_finalY)
-
-
-      
-    
-      
       if fim == True:
         pass
       j+=1
     
-
 
 
     chegou = False
@@ -629,7 +677,11 @@ def javascript():
     ang_referencia = funcoes.angulo_referencia(1,3,pos_bolaX[-1],pos_bolaY[-1])
     
     ##TRAJETORIA - CONDUZ A BOLA
-
+    '''
+    ======================================================================================
+      CONDUZ A BOLA ATÉ DETERMINADO PONTO -> VELOCIDADE DA BOLA = VELOCIDADE DO ROBO
+    ======================================================================================
+    '''  
     while chegou == False:
       funcoes.velocidade_aceleracao_Robo(nova_velTotal,nova_vel_X,nova_vel_Y,aX_movimentando_bola,aY_movimentando_bola,aceleracaoRobo,novo_angulo[-1],j,0.02)
       aux2X = funcoes.deslocamento_RoboX(novo_roboX[j],aX_movimentando_bola[j],nova_vel_X[j],funcoes.const_variacao_tempo)
@@ -645,22 +697,12 @@ def javascript():
 
       calculo_posicao_bolaX = funcoes.const_raio* math.cos(auxiliar)+aux2X
       calculo_posicao_bolaY = funcoes.const_raio*math.sin(auxiliar)+aux2Y
-
-      
-      
-      
-        
     
         #corrige os valores da velocidade caso seja menor q a minima
       if nova_velTotal[j+1]<= funcoes.vel_alvo:
         nova_velTotal[j+1] = funcoes.vel_alvo
         nova_vel_X[j+1] = nova_velTotal[j+1]*math.cos(math.radians(novo_angulo[j]))
         nova_vel_Y[j+1] = nova_velTotal[j+1]*math.sin(math.radians(novo_angulo[j]))
-
-      
-
-
-
 
 
       if calculo_posicao_bolaX <=1.5 :
@@ -677,17 +719,13 @@ def javascript():
       pos_bolaX.insert(j+1,calculo_posicao_bolaX )
       pos_bolaY.insert(j+1,calculo_posicao_bolaY)
 
-      
-    
-      
-      
       if chegouX == True and chegouY == True:
         chegou = True
         break
       j+=1
 
     
-    
+    #guarda o valor do angulo, já que a bola possui inércia
     angulo_momentum = novo_angulo[-1]
     j = len(novo_roboX)-1
     ang_referencia_gol = funcoes.angulo_referencia(0,3,pos_bolaX[-1],pos_bolaY[-1])
@@ -707,6 +745,11 @@ def javascript():
   
     
 
+    '''
+    ===========================================================================================
+    TRAJETÓRIA AO REDOR DA BOLA 2 -> BOLA PERMANECE NA VELOCIDADE ANTERIOR, PORÉM DESACELERANDO
+    ===========================================================================================
+    '''
 
     #TRAJETORIA - FAZ A VOLTA AO REDOR DA BOLA PARA SE PREPARAR PARA CHUTAR
     while fim == False:
@@ -746,6 +789,8 @@ def javascript():
       else:  
         distancia_finalX = (-funcoes.const_raio* math.cos(ang_final))+pos_bolaX[j]
       distancia_finalY = -funcoes.const_raio*math.sin(ang_final)+pos_bolaY[j]
+
+      #VELOCIDADE DO ROBO AQUI É CONSTANTE
       nova_vel_X.append((distancia_finalX-novo_roboX[j])/0.02)
       nova_vel_Y.append((distancia_finalY-novo_roboY[j])/0.02)
       #distancia_bola = math.sqrt((math.pow((bolaX[i] - novo_roboX[j]),2) + math.pow((bolaY[i] - novo_roboY[j]),2)))
@@ -753,6 +798,7 @@ def javascript():
       novo_roboX.insert(j+1,distancia_finalX)
       novo_roboY.insert(j+1,distancia_finalY)
 
+      #DESACELERAÇÃO DA BOLA
       #a bola continua a se mover com a velocidade de recuo, já que não esta mais sendo guiada pelo robo
       bola_vel_recuoX.append(bola_vel_recuoX[j]+bola_desaleracaoX*funcoes.const_variacao_tempo)
       bola_vel_recuoY.append(bola_vel_recuoY[j]+bola_desaleracaoY*funcoes.const_variacao_tempo)
@@ -769,6 +815,12 @@ def javascript():
 
     
     
+
+    '''
+    ======================================================================================
+    RECUO DO ROBO MOMENTO ANTES DE CHUTAR -> quanto maior o valor no while, maior o recuo
+    ======================================================================================
+    '''
     #loop que faz o recuo do robo levando em conta uma posição destino acima da bola, com distancia de 1 m a 60 graus
 
     #quanto mais aumenta o conta no while, maior é o recuo
@@ -776,18 +828,19 @@ def javascript():
     #print(novo_roboX)
     while conta <5:
       anguloBola = 60
+      #calcula o ponto destino do robo
       destinoX = pos_bolaX[j] + 1*math.cos(math.radians(anguloBola))
 
       destinoY =pos_bolaY[j] +1*math.sin(math.radians(anguloBola))
-
+      #calcula a direção
       direc = funcoes.angulo(destinoX,destinoY,novo_roboX[j],novo_roboY[j])
 
-
+      #movimenta o robo
       funcoes.velocidade_aceleracao_Robo(nova_velTotal,nova_vel_X,nova_vel_Y,aX_movimentando_bola,aY_movimentando_bola,aceleracaoRobo,direc,j,0.02)
       aux2X = funcoes.deslocamento_RoboX(novo_roboX[j],aX_movimentando_bola[j],nova_vel_X[j],funcoes.const_variacao_tempo)
       aux2Y = funcoes.deslocamento_RoboY(novo_roboY[j],aY_movimentando_bola[j],nova_vel_Y[j],funcoes.const_variacao_tempo)
       
-      
+      #a bola continua se movendo e desacelerando
       bola_vel_recuoX.append(bola_vel_recuoX[j]+bola_desaleracaoX*funcoes.const_variacao_tempo)
       bola_vel_recuoY.append(bola_vel_recuoY[j]+bola_desaleracaoY*funcoes.const_variacao_tempo)
       pos_bolaX.append(funcoes.deslocamento_RoboX(pos_bolaX[j],bola_desaleracaoX,bola_vel_recuoX[j],funcoes.const_variacao_tempo))
@@ -807,12 +860,19 @@ def javascript():
     chute = False
     chuteX = False
     chuteY = False
-    
+
+    '''
+    ======================================================================================
+                          TRAJETÓRIA DA APROXIMAÇÃO PARA O CHUTE
+    ======================================================================================
+    '''
 
     #realiza o movimento de aproximação até a bola para chutar
     while chute == False:
       #angulo de referencia dentro do gol, com y valendo 5
       angulus = funcoes.angulo(0,5,novo_roboX[j],novo_roboY[j])
+
+      #angulo de referencia com a bola (ROBO DEVE IR EM DIREÇÃO A BOLA)
       angulus_a = funcoes.angulo(pos_bolaX[j],pos_bolaY[j],novo_roboX[j],novo_roboY[j])
       
 
@@ -825,20 +885,17 @@ def javascript():
       
     
 
-      calculo_posicao_bolaX = -funcoes.const_raio* math.cos(auxiliar)+aux2X
-      calculo_posicao_bolaY = funcoes.const_raio*math.sin(auxiliar)+aux2Y
-      pos_bolaX.append(funcoes.deslocamento_RoboX(pos_bolaX[j],-0.015,bola_vel_recuoX[j],funcoes.const_variacao_tempo)) 
-      bola_vel_recuoX.append(bola_vel_recuoX[j]-0.015*funcoes.const_variacao_tempo)
-      pos_bolaY.append(funcoes.deslocamento_RoboX(pos_bolaY[j],-0.016,bola_vel_recuoY[j],funcoes.const_variacao_tempo))
-      bola_vel_recuoY.append(bola_vel_recuoY[j]-0.016*funcoes.const_variacao_tempo) 
+      #a bola continua se movendo devido a inércia, porém ainda desacelerando
+      pos_bolaX.append(funcoes.deslocamento_RoboX(pos_bolaX[j],bola_desaleracaoX,bola_vel_recuoX[j],funcoes.const_variacao_tempo)) 
+      bola_vel_recuoX.append(bola_vel_recuoX[j]+bola_desaleracaoX*funcoes.const_variacao_tempo)
+      pos_bolaY.append(funcoes.deslocamento_RoboX(pos_bolaY[j],bola_desaleracaoY,bola_vel_recuoY[j],funcoes.const_variacao_tempo))
+      bola_vel_recuoY.append(bola_vel_recuoY[j]+bola_desaleracaoY*funcoes.const_variacao_tempo) 
       
       ang_final = auxiliar
+      #faz as limitações para o robo não entrar na bola e definir que o robo chutou a bola
       if aux2Y <= -funcoes.const_raio*math.sin(ang_final)+pos_bolaY[j]:
         aux2Y = -funcoes.const_raio*math.sin(ang_final)+pos_bolaY[j]
         chuteY = True
-        
-        
-        
       if aux2X <= -funcoes.const_raio* math.cos(ang_final)+pos_bolaX[j]:
         aux2X = -funcoes.const_raio* math.cos(ang_final)+pos_bolaX[j]   
         chuteX = True
@@ -862,14 +919,18 @@ def javascript():
   
     gol = False
 
-  
-    
-
+    '''
+    ======================================================================================
+      TRAJETORIA DA BOLA ATÉ O GOL -> VELOCIDADE DA BOLA OBTIDA PELO CALCULO DOS VETORES
+    ======================================================================================
+    '''
+    #calcula o vetor resultante entre a velocidade da bola e do robo
     velocidadeX = (nova_vel_X[-1]+bola_vel_recuoX[-1])
     velocidadeY = (nova_vel_Y[-1]+bola_vel_recuoY[-1])
     direcao = funcoes.angulo2(nova_vel_X[j] ,nova_vel_Y[j] ,bola_vel_recuoX[j] ,bola_vel_recuoY[j])
     modulo_velocidade = math.sqrt(math.pow(velocidadeX,2)+math.pow(velocidadeY,2))
 
+    #inverte a aceleração do robo, para ele frear
     aceleracaoRobo*=-1
     while gol == False:
       funcoes.velocidade_aceleracao_Robo(nova_velTotal,nova_vel_X,nova_vel_Y,aX_movimentando_bola,aY_movimentando_bola,aceleracaoRobo,180,j,0.02)
@@ -879,14 +940,16 @@ def javascript():
         nova_vel_X[j+1] = 0
         nova_vel_Y[j+1] = 0
         aceleracaoRobo = 0
+
+      #robo segue se movendo, porém freando  
       aux2X = funcoes.deslocamento_RoboX(novo_roboX[j],aX_movimentando_bola[j],nova_vel_X[j],funcoes.const_variacao_tempo)
       aux2Y = funcoes.deslocamento_RoboY(novo_roboY[j],aY_movimentando_bola[j],nova_vel_Y[j],funcoes.const_variacao_tempo)
       
-
-      bola_vel_recuoX.append(velocidadeX+0.015*funcoes.const_variacao_tempo)
-      bola_vel_recuoY.append(velocidadeY+0.016*funcoes.const_variacao_tempo)
-      pos_bolaX.append(funcoes.deslocamento_RoboX(pos_bolaX[j],+0.015,bola_vel_recuoX[j],funcoes.const_variacao_tempo))
-      pos_bolaY.append(funcoes.deslocamento_RoboX(pos_bolaY[j],+0.016,bola_vel_recuoY[j],funcoes.const_variacao_tempo))
+      #bola se move na velocidade e direção do vetor resultante, porém continua desacelerando
+      bola_vel_recuoX.append(velocidadeX+bola_desaleracaoX*funcoes.const_variacao_tempo)
+      bola_vel_recuoY.append(velocidadeY+bola_desaleracaoY*funcoes.const_variacao_tempo)
+      pos_bolaX.append(funcoes.deslocamento_RoboX(pos_bolaX[j],bola_desaleracaoX,bola_vel_recuoX[j],funcoes.const_variacao_tempo))
+      pos_bolaY.append(funcoes.deslocamento_RoboX(pos_bolaY[j],bola_desaleracaoY,bola_vel_recuoY[j],funcoes.const_variacao_tempo))
       novo_roboX.append(aux2X)  
       novo_roboY.append(aux2Y)
       
@@ -901,7 +964,7 @@ def javascript():
 
     
 
-  #aux2X = 3-funcoes.const_raio* math.cos(auxiliar)
+  #cria o arquivo txt
     arquivo = open("instrucoes-javascript.txt","w")
     for m in range(len(roboX)):
       
@@ -926,7 +989,7 @@ bot_iniciar = Button(janela,text="Iniciar",font=("Arial",16),command=iniciar)
 bot_iniciar.place(relx=0.5,rely=0.1)
 bot_gerarGraficos = Button(janela,text="Gerar gráficos",font=("Arial",16),command=graficos)
 bot_gerarGraficos.place(relx=0.59,rely=0.1)
-bot_gerarGraficos = Button(janela,text="Gerar arquivo .js",font=("Arial",16),command=javascript)
+bot_gerarGraficos = Button(janela,text="Gerar arquivo .txt",font=("Arial",16),command=javascript)
 bot_gerarGraficos.place(relx=0.768,rely=0.1)
 
 bot_anterior = Button(janela,text="<",font=("Arial",16),command=anterior)

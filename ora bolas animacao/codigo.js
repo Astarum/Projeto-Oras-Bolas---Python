@@ -130,7 +130,7 @@ function desenharElementos(){
     ctx.drawImage(imagem_bola,bola.x,bola.y,bola.largura,bola.altura);
 
     //tempo
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.textAlign = 'center';
     ctx.font = "45px Arial";
 

@@ -3,14 +3,14 @@ import math
 import matplotlib.pyplot as plt
 
 #constantes
-const_raio = 0.33
+const_raio = 0.33   #(0.54 + 0.12)/2
 const_aceleracao = 1.5
 PI_ = 3.14159265358979323
 vel_max = 2.3
 const_pasta_graficos = "graficos/"
 vel_alvo = 1
 const_variacao_tempo = 0.02
-const_modulo_bola = math.sqrt(math.pow(0.015,2)+math.pow(0.016,2))
+const_modulo_bola = math.sqrt(math.pow(-0.015,2)+math.pow(-0.016,2))
 
 
 #função para ler os arquivos e retornar já lista com os valores em números reais
@@ -96,6 +96,8 @@ def angulo(bolaX, bolaY, roboX,roboY):
     ang+=360
 
   return ang
+
+# CALCULO DE VETORES RESULTANTES (direção)
 
 def angulo2(bolaX, bolaY, roboX,roboY):
   global PI_     
@@ -191,8 +193,11 @@ def deslocamento_RoboY(deslY,acelY, velocidadeY, tempo):
     return auxiliarY
 
 
-
-
+'''
+======================================================================================
+                                    GRAFICOS
+======================================================================================
+'''
     
 #funções para os graficos    
 def gerar_graficoDistancia(grafico_tempo, grafico_distancia):
@@ -212,15 +217,6 @@ def gerar_graficoDistancia(grafico_tempo, grafico_distancia):
   ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
   plt.savefig(f"./ora bolas animacao/{const_pasta_graficos}/graficoDistanciaTempo.png")
   plt.show()
-
-# def gera_graficoPosicao(grafico_bolaX,grafico_bolaY,grafico_roboX,grafico_roboY):
-#   # esse grafico marca o instante da interceptação, sobre o tempo 
-#   matplotlib.pyplot.title('coordenadas do robo e da bola até o momento da interceptação')
-#   matplotlib.pyplot.xlabel('Azul = Posição do robo Laranja = Posição da bola')
-#   #posição em x.
-#   matplotlib.pyplot.plot(grafico_roboX, grafico_roboY)
-#   #posição em y.
-#   matplotlib.pyplot.show()
 
 def gera_graficoPosicaoTempo(grafico_bolaX,grafico_bolaY,grafico_roboX,grafico_roboY, grafico_tempo):
   #distancia do robo e da bola.
