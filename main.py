@@ -965,7 +965,7 @@ def javascript():
     
 
   #cria o arquivo txt
-    arquivo = open("instrucoes-javascript.txt","w")
+    arquivo = open("./ora bolas animacao/instrucoes-javascript.txt","w")
     for m in range(len(roboX)):
       
       arquivo.write("%2.2f %2.2f %2.2f %2.2f %2.2f %2.2f\n"% (tempoFloat[m],bolaX[m],bolaY[m],roboX[m],roboY[m],ang[m]))

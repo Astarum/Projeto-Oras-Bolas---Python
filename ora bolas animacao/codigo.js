@@ -69,19 +69,14 @@ let imagem_campo = new Image();
 imagem_campo.src = 'campo.jpeg';
 
 
-
-//pega as informações do arquivo e guarda nas listas
-var file = document.getElementById('escolher_arquivo');
-
-
-
 var terminado = false;
-file.addEventListener('change', () => {
+//pega as informações do arquivo e guarda nas listas
 
-    var fr = new FileReader();
-    fr.onload = function() {
-        //le o arquivo e cria uma lista com as linhas
-        var linhas = this.result.split('\n');
+fetch('instrucoes-javascript.txt')
+    .then(response => response.text())
+    .then(data => {
+        // Do something with your data
+        var linhas = data.split('\n');
 
         //atribui cada valor da linha à lista correta
         for(var i=0;i<linhas.length;i++){
@@ -100,12 +95,11 @@ file.addEventListener('change', () => {
 
         //termina o processo
         terminado = true;
+    });
 
-    }
 
 
-    fr.readAsText(file.files[0]);
-})
+
     if (terminado == true){
         console.log(bolaX);
     }
