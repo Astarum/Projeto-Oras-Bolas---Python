@@ -75,7 +75,7 @@ var terminado = false;
 fetch('instrucoes-javascript.txt')
     .then(response => response.text())
     .then(data => {
-        // Do something with your data
+        
         var linhas = data.split('\n');
 
         //atribui cada valor da linha à lista correta
