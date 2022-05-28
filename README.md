@@ -1,7 +1,7 @@
 # Projeto-Oras-Bolas---Python
 
-Nosso projeto consiste no robô interceptar a bola, dominar ela e conduzir, e em seguida chutar no gol.
-Para realizar, aplicamos fórmulas de física em todos os movimentos da bola e do robô, inclusive nos movimentos de recúo da bola após a interceptação.
+Nosso projeto consiste no robô interceptar a bola, dominar ela e conduzir, e em seguida "chutá-la" no gol.
+Para realizar isso, aplicamos fórmulas de física em todos os movimentos da bola e do robô, inclusive nos movimentos de recúo da bola após a interceptação.
 
 Utilizamos python para conseguir a trajetória e o canvas do javascript para desenhá-la.
 
