@@ -1,5 +1,3 @@
-
-
 let canvas = document.getElementById("meuCanvas");
 let ctx = canvas.getContext("2d")
 //tamanho do campo
@@ -69,14 +67,19 @@ let imagem_campo = new Image();
 imagem_campo.src = 'campo.jpeg';
 
 
-var terminado = false;
-//pega as informações do arquivo e guarda nas listas
 
-fetch('instrucoes-javascript.txt')
-    .then(response => response.text())
-    .then(data => {
-        
-        var linhas = data.split('\n');
+//pega as informações do arquivo e guarda nas listas
+var file = document.getElementById('escolher_arquivo');
+
+
+
+var terminado = false;
+file.addEventListener('change', () => {
+
+    var fr = new FileReader();
+    fr.onload = function() {
+        //le o arquivo e cria uma lista com as linhas
+        var linhas = this.result.split('\n');
 
         //atribui cada valor da linha à lista correta
         for(var i=0;i<linhas.length;i++){
@@ -95,17 +98,20 @@ fetch('instrucoes-javascript.txt')
 
         //termina o processo
         terminado = true;
-    });
+
+    }
 
 
-
-
+    fr.readAsText(file.files[0]);
+})
     if (terminado == true){
         console.log(bolaX);
     }
 
 //variável que bloqueia o desenho das figuras
 var desenhado = false;
+var fim_animacao = false;
+var frase;
 
 //desenha o campo
  function desenharCampo(){
@@ -123,12 +129,41 @@ function desenharElementos(){
     ctx.drawImage(imagem_robo, robo.x, robo.y, robo.largura, robo.altura);
     ctx.drawImage(imagem_bola,bola.x,bola.y,bola.largura,bola.altura);
 
-    //tempo
-    ctx.fillStyle = "white";
-    ctx.textAlign = 'center';
-    ctx.font = "45px Arial";
+    if (fim_animacao == false){
+        if (pause == false){
+            ctx.fillStyle = "black";
+            ctx.textAlign = 'center';
+            ctx.font = "45px Arial";
 
-    ctx.fillText(tempo[j], canvas.width/2, (canvas.height)/2-300);
+            ctx.fillText(tempo[j], canvas.width/2, (canvas.height)/2-300);
+        }else{
+            ctx.fillStyle = "white";
+            ctx.font = "40px Arial";
+            ctx.fillText(`Instante de tempo: ${tempo[j]}`, canvas.width/2, (canvas.height)/2);
+            ctx.fillText(`Posição do robô: X:${roboX[j]} Y:${roboY[j]}`, canvas.width/2, (canvas.height)/2+50);
+            ctx.fillText(`Posição da bola: X:${bolaX[j]} Y:${bolaY[j]}`, canvas.width/2, (canvas.height)/2+100);
+
+        }
+
+    }
+    else{
+        ctx.fillStyle = "white";
+        ctx.textAlign = 'center';
+        ctx.font = "70px Arial";
+
+        ctx.fillText("Bola interceptada!!!", canvas.width/2, (canvas.height)/2-100);
+
+        ctx.font = "40px Arial";
+        ctx.fillText(`Instante de tempo: ${tempo[j]}`, canvas.width/2, (canvas.height)/2);
+        ctx.fillText(`Posição do robô: X:${roboX[j]} Y:${roboY[j]}`, canvas.width/2, (canvas.height)/2+50);
+        ctx.fillText(`Posição da bola: X:${bolaX[j]} Y:${bolaY[j]}`, canvas.width/2, (canvas.height)/2+100);
+
+
+
+
+    }
+
+
     desenhado = true;
 
 
@@ -165,6 +200,7 @@ function movimentoRoboBola() {
 
         if(j>roboX.length-1){
             j = roboX.length-1;
+            fim_animacao = true;
         }
     }
 
@@ -189,7 +225,7 @@ function principal(){
         desenharElementos();
     }
     //controla a velocidade da animação, quanto maior o valor, mais lenta a animação
-    if(contador2%10==0){
+    if(contador2%8==0){
 
         if(desenhado==true){
             movimentoRoboBola();

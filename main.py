@@ -5,6 +5,8 @@ import math
 from tkinter import *
 from tkinter import messagebox
 from tkinter import scrolledtext
+import webbrowser
+import os
 
 
 
@@ -85,6 +87,7 @@ primeira_interacao_anterior = True
 primeira_interacao_proximo = True
 frearX = False
 velocidade_recuo = 0
+paginas = False
 #inicializando as variáveis de posição inicial do robo
 xI=0
 yI=0
@@ -537,6 +540,19 @@ def proximo():
         txt.insert(END,("\nVelocidade no momento do contato: %f\n" % (math.sqrt(math.pow(velX_robo[i],2)+math.pow(velY_robo[i],2)))))
         interacao_entre_botoes = i
            
+'''
+======================================================================================
+                          BOTÃO PARA ABRIR A PÁGINA
+======================================================================================
+''' 
+def pagina():
+  global paginas
+  if paginas == False:
+    messagebox.showerror("Error","Por favor, gere o arquivo txt antes!")
+  else:
+    webbrowser.open_new_tab('file:///'+os.getcwd()+'./ora bolas animacao/' + 'index.html')
+
+  
 
 '''
 ======================================================================================
@@ -544,7 +560,7 @@ def proximo():
 ======================================================================================
 '''   
 def javascript():
-  global velocidade_recuo,frearX,velTotal_robo,velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_aceleracao_BolaY,grafico_velocidade_BolaX,grafico_velocidade_BolaY,bolaX,bolaY,tempoFloat,grafico_aceleracao_BolaY,grafico_aceleracao_BolaY,ultimo_elemento,deslocamentoX,deslocamentoY,ang,raioX,raioY,existem_dados,primeira_interacao_anterior,primeira_interacao_proximo,existem_dados,interacao_entre_botoes
+  global paginas,velocidade_recuo,frearX,velTotal_robo,velX_robo,velY_robo,graficoTempo,grafico_bolaX,grafico_bolaY,roboX,roboY,distancia,aX_robo, aY_robo,grafico_aceleracao_BolaX, grafico_aceleracao_BolaY,grafico_velocidade_BolaX,grafico_velocidade_BolaY,bolaX,bolaY,tempoFloat,grafico_aceleracao_BolaY,grafico_aceleracao_BolaY,ultimo_elemento,deslocamentoX,deslocamentoY,ang,raioX,raioY,existem_dados,primeira_interacao_anterior,primeira_interacao_proximo,existem_dados,interacao_entre_botoes
   if existem_dados == False:
     messagebox.showerror("Error","Não há dados")
   else:  
@@ -976,6 +992,7 @@ def javascript():
       #arquivo.write(f"{tempoFloat[i+l]}.2f {pos_bolaX[l]} {pos_bolaY[l]} {novo_roboX[l]} {novo_roboY[l]} {novo_angulo[l]}\n")
     
     arquivo.close()
+    paginas = True
 
       
 
@@ -987,10 +1004,13 @@ def javascript():
 #botao de pesquisar
 bot_iniciar = Button(janela,text="Iniciar",font=("Arial",16),command=iniciar)
 bot_iniciar.place(relx=0.5,rely=0.1)
+bot_iniciar = Button(janela,text="Abrir página",font=("Arial",16),command=pagina)
+bot_iniciar.place(relx=0.5,rely=0.2)
 bot_gerarGraficos = Button(janela,text="Gerar gráficos",font=("Arial",16),command=graficos)
 bot_gerarGraficos.place(relx=0.59,rely=0.1)
 bot_gerarGraficos = Button(janela,text="Gerar arquivo .txt",font=("Arial",16),command=javascript)
 bot_gerarGraficos.place(relx=0.768,rely=0.1)
+
 
 bot_anterior = Button(janela,text="<",font=("Arial",16),command=anterior)
 bot_anterior.place(relx=0.44,rely=0.9)
