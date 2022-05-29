@@ -129,39 +129,24 @@ function desenharElementos(){
     ctx.drawImage(imagem_robo, robo.x, robo.y, robo.largura, robo.altura);
     ctx.drawImage(imagem_bola,bola.x,bola.y,bola.largura,bola.altura);
 
-    if (fim_animacao == false){
-        if (pause == false){
-            ctx.fillStyle = "black";
-            ctx.textAlign = 'center';
-            ctx.font = "45px Arial";
 
-            ctx.fillText(tempo[j], canvas.width/2, (canvas.height)/2-300);
-        }else{
-            ctx.fillStyle = "white";
-            ctx.font = "40px Arial";
-            ctx.fillText(`Instante de tempo: ${tempo[j]}`, canvas.width/2, (canvas.height)/2);
-            ctx.fillText(`Posição do robô: X:${roboX[j]} Y:${roboY[j]}`, canvas.width/2, (canvas.height)/2+50);
-            ctx.fillText(`Posição da bola: X:${bolaX[j]} Y:${bolaY[j]}`, canvas.width/2, (canvas.height)/2+100);
-
-        }
-
-    }
-    else{
-        ctx.fillStyle = "white";
+    if (pause == false){
+        ctx.fillStyle = "black";
         ctx.textAlign = 'center';
-        ctx.font = "70px Arial";
+        ctx.font = "45px Arial";
 
-        ctx.fillText("Bola interceptada!!!", canvas.width/2, (canvas.height)/2-100);
-
+        ctx.fillText(tempo[j], canvas.width/2, (canvas.height)/2-300);
+    }else{
+        ctx.fillStyle = "white";
         ctx.font = "40px Arial";
         ctx.fillText(`Instante de tempo: ${tempo[j]}`, canvas.width/2, (canvas.height)/2);
         ctx.fillText(`Posição do robô: X:${roboX[j]} Y:${roboY[j]}`, canvas.width/2, (canvas.height)/2+50);
         ctx.fillText(`Posição da bola: X:${bolaX[j]} Y:${bolaY[j]}`, canvas.width/2, (canvas.height)/2+100);
 
-
-
-
     }
+
+
+
 
 
     desenhado = true;
